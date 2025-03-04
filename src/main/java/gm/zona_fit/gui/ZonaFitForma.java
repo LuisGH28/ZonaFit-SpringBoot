@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-@Component
+//@Component
 public class ZonaFitForma extends JFrame{
     private JPanel panelPrincipal;
     private JTable clientesTabla;
@@ -52,11 +52,19 @@ public class ZonaFitForma extends JFrame{
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
-        this.tablaModeloClientes = new DefaultTableModel(0, 4);
+        //this.tablaModeloClientes = new DefaultTableModel(0, 4);
+        // Evitamos la edicion de los valores de las celdeas de la tabla
+        this.tablaModeloClientes = new DefaultTableModel(0,4){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
         String[] cabeceros = {"Id", "Nombre", "Apellido", "Memebrensia"};
         this.tablaModeloClientes.setColumnIdentifiers(cabeceros);
         this.clientesTabla = new JTable(tablaModeloClientes);
-
+        // Restringimo sla seleecion de la tabla a un solo registro
+        this.clientesTabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         //Cargar listado de clientes
         listarClientes();
     }
@@ -102,14 +110,18 @@ public class ZonaFitForma extends JFrame{
     }
 
     private void eliminarCliente(){
-        var nombre = nombreTexto.getText();
-        var apellido = apellidoTexto.getText();
-        var membresia = Integer.parseInt(membresiaTexto.getText());
-        var cliente = new Cliente(this.idCliente, nombre, apellido, membresia);
-        this.clienteServicio.eliminarCliente(cliente);
-        mostrarMensaje("Se ha elimiado el cliente");
-        limpiarFormulario();
-        listarClientes();
+        var renglon = clientesTabla.getSelectedRow();
+        if(renglon != -1){
+            var idClienteStr = clientesTabla.getModel().getValueAt(renglon, 0).toString();
+            this.idCliente = Integer.parseInt(idClienteStr);
+            var cliente = new Cliente();
+            cliente.setId(this.idCliente);
+            clienteServicio.eliminarCliente(cliente);
+            mostrarMensaje("Cliente con id " + this.idCliente + " eliminado");
+            limpiarFormulario();
+            listarClientes();
+        }else
+            mostrarMensaje("Debe de seleccionar un Cliente a eliminar");
     }
 
     private void cargarClienteSeleccionado(){

@@ -10,7 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.swing.*;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class ZonaFitSwing {
     public static void main(String[] args) {
         // Configuramos el modo oscuro
