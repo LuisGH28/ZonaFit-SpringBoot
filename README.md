@@ -19,4 +19,4 @@ The following is a program that allows the management of users for a gym called 
 
 ## Project View
 
-![Zona_Fit_Web](../images/view.png)
+![Zona_Fit_Web](/images/view.png)
