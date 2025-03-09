@@ -48,7 +48,11 @@ public class IndexControlador {
         this.clienteServicio.guardarCliente(clienteSeleccionado);
         this.clientes.add(this.clienteSeleccionado);   
         FacesContext.getCurrentInstance().addMessage(null,
-            new FacesMessage("Cliente Agregado"));        
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Agregado", null));         
+    }else{
+        this.clienteServicio.guardarCliente(this.clienteSeleccionado);
+        FacesContext.getCurrentInstance().addMessage(null,
+        new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Actualizado", null));
     }
 
     // Ocultar la ventana modal 
@@ -60,5 +64,18 @@ public class IndexControlador {
 
     // Reset del objeto cliente seleecionado
     this.clienteSeleccionado = null;
+  }
+
+  public void eliminarCliente(){
+    logger.info("Cliente a eliminar: " + this.clienteSeleccionado);
+    this.clienteServicio.eliminarCliente(this.clienteSeleccionado);
+    // Eliminar el registro de la lista de clientes
+    this.clientes.remove(this.clienteSeleccionado);
+    // Reset del objeto cliente seleecionado
+    this.clienteSeleccionado = null;
+    FacesContext.getCurrentInstance().addMessage(null,
+        new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente Eliminado", null));
+    // Actualizar la tabla usando AJAX
+    PrimeFaces.current().ajax().update("forma-clientes:mensaje", "forma-clientes:clientes-tabla");
   }
 }
